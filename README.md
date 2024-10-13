@@ -64,3 +64,6 @@ showBoard() 다음에 doseUserWinTheGame()과 doseUserLoseTheGame() 메서드를
 ### 매직 넘버, 매직 스트링
 * 의미를 갖고 있으나, 상수로 추출되지 않은 숫자, 문자열 등
 * 상수 추출로 이름을 짓고 의미를 부여함으로써 가독성, 유지보수성 향상
+
+## Section 3-2 Early return
+Early return으로 else의 사용을 지양
