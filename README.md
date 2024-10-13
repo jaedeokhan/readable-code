@@ -161,3 +161,42 @@ Scanner 변수가 떨어져있어서 가깝게 선언을 한다.
 ## Section 3-4 공백 라인을 대하는 자세
 공백 라인도 의미를 가진다.
 * 복잡한 로직의 의미 단위로 나누어 보여줌으로써 읽는 사람에게 추가적인 정보를 전달할 수 있다.
+
+## Section 3-5 부정어를 대하는 자세
+* 부정어구를 쓰지 않아도 되는 상황인지 체크하기
+* 부정의 의미를 담은 다른 단어가 존재하는지 고민하기 or 부정어구로 메서드명 구성
+  * 부정 연산자(!)의 가독성 저하
+
+### 기존
+기존에는 !isLandMineCell() 메서드로 지뢰가 없는 경우를 부정어로 사용
+
+```java
+        for (int row = 0; row < BOARD_ROW_SIZE; row++) {
+            for (int col = 0; col < BOARD_COL_SIZE; col++) {
+                if (!isLandMineCell(row, col)) {
+                    int count = countNearbyLandMines(row, col);
+                    NEARBY_LAND_MINE_COUNTS[row][col] = count;
+                    continue;
+                }
+
+                NEARBY_LAND_MINE_COUNTS[row][col] = 0;
+            }
+        }
+```
+
+### 변경
+변경 후에는 isLandMineCell() 메서드로 지뢰가 있는 경우에는 0을 할당하고 continue
+지뢰가 없는 경우에는 주변 count를 세고 할당하기
+
+```java
+        for (int row = 0; row < BOARD_ROW_SIZE; row++) {
+            for (int col = 0; col < BOARD_COL_SIZE; col++) {
+                if (isLandMineCell(row, col)) {
+                    NEARBY_LAND_MINE_COUNTS[row][col] = 0;
+                    continue;
+                }
+                int count = countNearbyLandMines(row, col);
+                NEARBY_LAND_MINE_COUNTS[row][col] = count;
+            }
+        }
+```

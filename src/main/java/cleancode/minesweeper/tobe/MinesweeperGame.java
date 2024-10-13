@@ -194,38 +194,43 @@ public class MinesweeperGame {
 
         for (int row = 0; row < BOARD_ROW_SIZE; row++) {
             for (int col = 0; col < BOARD_COL_SIZE; col++) {
-                int count = 0;
-                if (!LAND_MINES[row][col]) {
-                    if (row - 1 >= 0 && col - 1 >= 0 && LAND_MINES[row - 1][col - 1]) {
-                        count++;
-                    }
-                    if (row - 1 >= 0 && LAND_MINES[row - 1][col]) {
-                        count++;
-                    }
-                    if (row - 1 >= 0 && col + 1 < BOARD_COL_SIZE && LAND_MINES[row - 1][col + 1]) {
-                        count++;
-                    }
-                    if (col - 1 >= 0 && LAND_MINES[row][col - 1]) {
-                        count++;
-                    }
-                    if (col + 1 < BOARD_COL_SIZE && LAND_MINES[row][col + 1]) {
-                        count++;
-                    }
-                    if (row + 1 < BOARD_ROW_SIZE && col - 1 >= 0 && LAND_MINES[row + 1][col - 1]) {
-                        count++;
-                    }
-                    if (row + 1 < BOARD_ROW_SIZE && LAND_MINES[row + 1][col]) {
-                        count++;
-                    }
-                    if (row + 1 < BOARD_ROW_SIZE && col + 1 < BOARD_COL_SIZE && LAND_MINES[row + 1][col + 1]) {
-                        count++;
-                    }
-                    NEARBY_LAND_MINE_COUNTS[row][col] = count;
+                if (isLandMineCell(row, col)) {
+                    NEARBY_LAND_MINE_COUNTS[row][col] = 0;
                     continue;
                 }
-                NEARBY_LAND_MINE_COUNTS[row][col] = 0;
+                int count = countNearbyLandMines(row, col);
+                NEARBY_LAND_MINE_COUNTS[row][col] = count;
             }
         }
+    }
+
+    private static int countNearbyLandMines(int row, int col) {
+        int count = 0;
+        if (row - 1 >= 0 && col - 1 >= 0 && LAND_MINES[row - 1][col - 1]) {
+            count++;
+        }
+        if (row - 1 >= 0 && LAND_MINES[row - 1][col]) {
+            count++;
+        }
+        if (row - 1 >= 0 && col + 1 < BOARD_COL_SIZE && LAND_MINES[row - 1][col + 1]) {
+            count++;
+        }
+        if (col - 1 >= 0 && LAND_MINES[row][col - 1]) {
+            count++;
+        }
+        if (col + 1 < BOARD_COL_SIZE && LAND_MINES[row][col + 1]) {
+            count++;
+        }
+        if (row + 1 < BOARD_ROW_SIZE && col - 1 >= 0 && LAND_MINES[row + 1][col - 1]) {
+            count++;
+        }
+        if (row + 1 < BOARD_ROW_SIZE && LAND_MINES[row + 1][col]) {
+            count++;
+        }
+        if (row + 1 < BOARD_ROW_SIZE && col + 1 < BOARD_COL_SIZE && LAND_MINES[row + 1][col + 1]) {
+            count++;
+        }
+        return count;
     }
 
     private static void showGameStartComments() {
