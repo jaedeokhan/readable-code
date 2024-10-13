@@ -67,3 +67,51 @@ showBoard() 다음에 doseUserWinTheGame()과 doseUserLoseTheGame() 메서드를
 
 ## Section 3-2 Early return
 Early return으로 else의 사용을 지양
+
+### 기존
+기존 코드에서는 if, else if, else 구문이 혼재되어 있다.
+
+```java
+            int selectedColIndex = getSelectedColIndex(cellInput);
+            int selectedRowIndex = getSelectedRowIndex(cellInput);
+            if (doseUserChooseToPlantFlag(userActionInput)) {
+                BOARD[selectedRowIndex][selectedColIndex] = FLAG_SIGN;
+                checkIfGameIsClear();
+            } else if (doseUserChooseToOpenCell(userActionInput)) {
+                if (isLandMineCell(selectedRowIndex, selectedColIndex)) {
+                    BOARD[selectedRowIndex][selectedColIndex] = LAND_MINE_SIGN;
+                    changeGameStatusDoLose();
+                    continue;
+                } else {
+                    open(selectedRowIndex, selectedColIndex);
+                }
+                checkIfGameIsClear();
+            } else {
+                System.out.println("잘못된 번호를 선택하셨습니다.");
+```
+
+### 변경
+Early return을 사용하면 if, else-if, else 구문을 제거 가능하다.
+
+```java
+    private static void actOrCell(String cellInput, String userActionInput) {
+        int selectedColIndex = getSelectedColIndex(cellInput);
+        int selectedRowIndex = getSelectedRowIndex(cellInput);
+        if (doseUserChooseToPlantFlag(userActionInput)) {
+            BOARD[selectedRowIndex][selectedColIndex] = FLAG_SIGN;
+            checkIfGameIsClear();
+            return;
+        }
+        if (doseUserChooseToOpenCell(userActionInput)) {
+            if (isLandMineCell(selectedRowIndex, selectedColIndex)) {
+                BOARD[selectedRowIndex][selectedColIndex] = LAND_MINE_SIGN;
+                changeGameStatusDoLose();
+                return;
+            }
+            open(selectedRowIndex, selectedColIndex);
+            checkIfGameIsClear();
+            return;
+        }
+        System.out.println("잘못된 번호를 선택하셨습니다.");
+    }
+```
