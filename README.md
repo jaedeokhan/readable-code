@@ -19,3 +19,42 @@ MinesweeperGame.java에서 기존에 존재하는 의미가 명확하지 않은 
     메서드로 한 번더 나눠준다.
     * 1. 모든 쉘이 열렸는지 확인 -> isAllCellOpened()
     * 2. 모든 쉘이 열렸으면 gameStatus 상태값 변환
+
+## Section 2-7 추상화 레벨
+`하나의 세계 안에서는, 추상화 레벨이 동등해야 한다.`
+
+하나의 클래스에 메서드는 레벨이 10이라고 하고, 구현체는 5라고 했을 때 추상화 레벨이 다르면 읽기가 어려워 진다.
+
+추상화 레벨을 맞춰줘야 읽기 편해진다.
+
+### 기존
+기존에는 showBoard()라는 추상화가 높은 메서드 다음에 구현체가 나온다.
+읽기에 많이 불편하지는 않지만 조금 더 추상화 레벨을 맞춰준다면 메서드로 뺄 수 있다.
+
+```java
+            showBoard();
+            if (gameStatus == GAME_CLEAR) {
+                System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
+                break;
+            }
+            if (gameStatus == GAME_OVER) {
+                System.out.println("지뢰를 밟았습니다. GAME OVER!");
+                break;
+            }
+```
+
+### 변경
+showBoard() 다음에 doseUserWinTheGame()과 doseUserLoseTheGame() 메서드를 만들어서 같은 추상화 레벨로 만들어줬다. 
+
+```java
+            showBoard();
+            if (doseUserWinTheGame()) {
+                System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
+                break;
+            }
+            if (doseUserLoseTheGame()) {
+                System.out.println("지뢰를 밟았습니다. GAME OVER!");
+                break;
+            }
+```
+
