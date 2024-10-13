@@ -115,3 +115,45 @@ Early return을 사용하면 if, else-if, else 구문을 제거 가능하다.
         System.out.println("잘못된 번호를 선택하셨습니다.");
     }
 ```
+
+## Section 3-3 사고의 depth 줄이기
+1. 중첩 분기문, 중첩 반복문
+2. 사용할 변수는 가깝게 선언하기(또는 메서드에 불필요한 파라미터 사용하지 않기)
+
+### 1. 중첩 분기문, 중첩 반복문
+중첩 반복문을 메서드로 변경할 때는 오히려 가독성을 해칠수도 있으니 유의해야 한다.
+Stream을 통해서 중첩 반복문을 제거해본다.
+
+#### 기존
+
+```java
+    private static boolean isAllCellOpened() {
+        boolean isAllOpened = true;
+        for (int row = 0; row < BOARD_ROW_SIZE; row++) {
+            for (int col = 0; col < BOARD_COL_SIZE; col++) {
+                if (BOARD[row][col].equals(CLOSED_CELL_SIGN)) {
+                    isAllOpened = false;
+                }
+            }
+        }
+        return isAllOpened;
+    }
+```
+
+#### 변경
+기존의 중첩 반복문을 Stream을 사용하면 편리하게 사용이 가능하다.
+BOARD 이중 배열을 Stream<String[]>으로 만들고,
+flatMap() 메서드를 통해서 Stream<String>으로 평탄화를 해주고,
+noneMatch() 메서드를 통해서 CLOSED_CELL_SIGN인지 즉 모든 셀이 열려있는지 체크한다. 
+
+```java
+    private static boolean isAllCellOpened() {
+        return Arrays.stream(BOARD) // Stream<String[]>
+                .flatMap(Arrays::stream) // Stream<String>
+                .noneMatch(cell -> cell.equals(CLOSED_CELL_SIGN));
+    }
+```
+
+### 2. 사용할 변수는 가깝게 선언하기
+Scanner 변수가 떨어져있어서 가깝게 선언을 한다. 
+선언하고 나니 while 구문 안에 있기에 객체를 매번 생성할 필요는 없기에 static으로 빼준다.
