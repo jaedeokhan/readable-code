@@ -34,20 +34,26 @@ public class MinesweeperGame {
         initializedGame();
 
         while (true) {
-            showBoard();
+            try {
+                showBoard();
 
-            if (doseUserWinTheGame()) {
-                System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
-                break;
-            }
-            if (doseUserLoseTheGame()) {
-                System.out.println("지뢰를 밟았습니다. GAME OVER!");
-                break;
-            }
+                if (doseUserWinTheGame()) {
+                    System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
+                    break;
+                }
+                if (doseUserLoseTheGame()) {
+                    System.out.println("지뢰를 밟았습니다. GAME OVER!");
+                    break;
+                }
 
-            String cellInput = getCellInputFromUser();
-            String userActionInput = getUserActionInputFromUser();
-            actOrCell(cellInput, userActionInput);
+                String cellInput = getCellInputFromUser();
+                String userActionInput = getUserActionInputFromUser();
+                actOrCell(cellInput, userActionInput);
+            } catch (AppException e) { // 의도한 예외
+                System.out.println(e.getMessage());
+            } catch (Exception e) { // 의도하지 못한 예외
+                System.out.println("프로그램에 문제가 생겼습니다.");
+            }
         }
     }
 
@@ -72,7 +78,7 @@ public class MinesweeperGame {
             checkIfGameIsClear();
             return;
         }
-        System.out.println("잘못된 번호를 선택하셨습니다.");
+        throw new AppException(String.format("잘못된 번호('%s') 선택하셨습니다.", userActionInput));
     }
 
     private static void changeGameStatusDoLose() {
@@ -133,11 +139,17 @@ public class MinesweeperGame {
     private static boolean isAllCellOpened() {
         return Arrays.stream(BOARD) // Stream<String[]>
                 .flatMap(Arrays::stream) // Stream<String>
-                .noneMatch(cell -> cell.equals(CLOSED_CELL_SIGN));
+                .noneMatch(CLOSED_CELL_SIGN::equals);
+//                .noneMatch(cell -> CLOSED_CELL_SIGN.equals(cell));
     }
 
     private static int convertRowFrom(char cellInputRow) {
-        return Character.getNumericValue(cellInputRow) - 1;
+        int rowIndex = Character.getNumericValue(cellInputRow);
+        if (rowIndex > BOARD_ROW_SIZE) {
+            throw new AppException(String.format("잘못된 행('%s') 입력 입니다.", cellInputRow));
+        }
+
+        return rowIndex;
     }
 
     private static int convertColFrom(char cellInputCol) {
@@ -163,7 +175,7 @@ public class MinesweeperGame {
             case 'j':
                 return 9;
             default:
-                return -1;
+                throw new AppException(String.format("잘못된 열('%s') 입력 입니다.", cellInputCol));
         }
     }
 
